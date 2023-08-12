@@ -1,5 +1,7 @@
+
 import org.jetbrains.kotlin.allopen.gradle.AllOpenExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
     id("org.springframework.boot") version "3.1.2" apply false
@@ -23,7 +25,7 @@ allprojects {
         }
     }
 
-    group = "com.example"
+    group = "com.autoregister"
     version = "0.0.1-SNAPSHOT"
 
 
@@ -44,6 +46,7 @@ allprojects {
     }
 }
 
+
 project(":modules:app") {
     subprojects {
         dependencies {
@@ -53,6 +56,13 @@ project(":modules:app") {
 }
 
 project(":modules:core") {
+
+    val jar: Jar by tasks
+    val bootJar: BootJar by tasks
+
+    bootJar.enabled = false
+    jar.enabled = true
+
     subprojects {
         extensions.configure(AllOpenExtension::class.java) {
             annotations("jakarta.persistence.Entity")
@@ -70,6 +80,7 @@ project(":modules:core") {
             implementation("org.springframework.boot:spring-boot-starter-security")
             implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
             implementation("org.jetbrains.kotlin:kotlin-reflect")
+
             runtimeOnly("com.h2database:h2")
 
             testImplementation("org.springframework.boot:spring-boot-starter-test")
