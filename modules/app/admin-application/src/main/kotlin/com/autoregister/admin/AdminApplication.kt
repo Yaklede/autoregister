@@ -1,11 +1,11 @@
-package com.naver.autoregister
+package com.autoregister.admin
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class AutoregisterApplication
+class AdminApplication
 
 fun main(args: Array<String>) {
-    runApplication<AutoregisterApplication>(*args)
+    runApplication<AdminApplication>(*args)
 }
