@@ -19,7 +19,7 @@ include(autoIncludeWithPathName("app") {
 })
 
 include(autoIncludeWithPathName("core") {
-    listOf("common")
+    listOf("common","naver-api","mysql-datasource")
 })
 
 fun autoIncludeWithPathName(path: String, modules: (Unit) -> List<String>): List<String> {

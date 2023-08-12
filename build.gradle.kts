@@ -71,18 +71,20 @@ project(":modules:core") {
         }
 
         dependencies {
+            //DB
             implementation ("com.querydsl:querydsl-jpa:5.0.0:jakarta")
             kapt ("com.querydsl:querydsl-apt:5.0.0:jakarta")
             kapt ("jakarta.annotation:jakarta.annotation-api")
             kapt ("jakarta.persistence:jakarta.persistence-api")
 
+            //Spring
             implementation("org.springframework.boot:spring-boot-starter-data-jpa")
             implementation("org.springframework.boot:spring-boot-starter-security")
             implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
             implementation("org.jetbrains.kotlin:kotlin-reflect")
 
-            runtimeOnly("com.h2database:h2")
-
+            //test
+            testImplementation("com.h2database:h2")
             testImplementation("org.springframework.boot:spring-boot-starter-test")
             testImplementation("org.springframework.security:spring-security-test")
         }
