@@ -1,0 +1,2 @@
+# autoregister
+auto-register
