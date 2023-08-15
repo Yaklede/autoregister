@@ -18,14 +18,14 @@ services:
         ports:
             - 3306:3306
 
-    web:
-        build:
-            context: .
-            dockerfile: Dockerfile
-        depends_on:
-            database:
-                condition: service_healthy
-        restart: always
+#    web:
+#        build:
+#            context: .
+#            dockerfile: Dockerfile
+#        depends_on:
+#            database:
+#                condition: service_healthy
+#        restart: always
 
 
 
