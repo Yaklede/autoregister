@@ -10,6 +10,22 @@ services:
             MYSQL_DATABASE: auto-register
             MYSQL_USER: auto
             MYSQL_PASSWORD: autoregister!@#
+        healthcheck:
+            test: [ 'CMD-SHELL', 'auto-register ping -h 127.0.0.1 -u root --password=$$MYSQL_ROOT_PASSWORD' ]
+            interval: 10s
+            timeout: 2s
+            retries: 100
         ports:
-            - "3306:3306"
+            - 3306:3306
+
+    web:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        depends_on:
+            database:
+                condition: service_healthy
+        restart: always
+
+
 
