@@ -23,11 +23,16 @@ allprojects {
             plugin("org.gradle.java")
             plugin("org.jetbrains.kotlin.kapt")
         }
+
+        dependencies {
+            runtimeOnly("com.mysql:mysql-connector-j")
+            kapt("org.springframework.boot:spring-boot-configuration-processor")
+            annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+        }
     }
 
     group = "com.autoregister"
     version = "0.0.1-SNAPSHOT"
-
 
     tasks.withType<JavaCompile> {
         sourceCompatibility = "17"
@@ -45,8 +50,8 @@ allprojects {
         useJUnitPlatform()
     }
 
-    dependencies {
-        runtimeOnly("com.mysql:mysql-connector-j")
+    tasks.named("compileJava") {
+        inputs.files(tasks.named("processResources"))
     }
 }
 
@@ -89,6 +94,24 @@ project(":modules:core") {
             //test
             testImplementation("org.springframework.boot:spring-boot-starter-test")
             testImplementation("org.springframework.security:spring-security-test")
+        }
+    }
+}
+
+project(":modules:internal") {
+    val jar: Jar by tasks
+    val bootJar: BootJar by tasks
+
+    bootJar.enabled = false
+    jar.enabled = true
+
+    subprojects {
+        dependencies {
+            implementation("org.springframework.boot:spring-boot-starter-web")
+            implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+            implementation("org.jetbrains.kotlin:kotlin-reflect")
+
+            testImplementation("org.springframework.boot:spring-boot-starter-test")
         }
     }
 }

@@ -1,3 +1,3 @@
 dependencies {
-    implementation(project(":modules:core:naver-api"))
+    implementation(project(":modules:internal:naver-api"))
 }
