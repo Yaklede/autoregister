@@ -34,4 +34,4 @@ jobs:
       shell: bash
       
     - name: Build with gradle -admin application
-      run : ./gradle clean modules:app:admin-application:build
+      run : gradle clean modules:app:admin-application:build
