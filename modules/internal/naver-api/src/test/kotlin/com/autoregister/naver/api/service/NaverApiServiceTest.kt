@@ -1,5 +1,17 @@
 package com.autoregister.naver.api.service
 
-import org.junit.jupiter.api.Assertions.*
+import com.autoregister.naver.api.config.NaverApiProperties
+import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
 
-class NaverApiServiceTest
+
+@SpringBootTest(classes = [NaverApiService::class, NaverApiProperties::class])
+class NaverApiServiceTest {
+    @Autowired
+    private lateinit var naverApiService: NaverApiService
+    @Test
+    fun test() {
+        naverApiService.getProperties();
+    }
+}
