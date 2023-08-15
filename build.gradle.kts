@@ -44,6 +44,10 @@ allprojects {
     tasks.withType<Test> {
         useJUnitPlatform()
     }
+
+    dependencies {
+        runtimeOnly("com.mysql:mysql-connector-j")
+    }
 }
 
 
@@ -76,15 +80,13 @@ project(":modules:core") {
             kapt ("com.querydsl:querydsl-apt:5.0.0:jakarta")
             kapt ("jakarta.annotation:jakarta.annotation-api")
             kapt ("jakarta.persistence:jakarta.persistence-api")
-
             //Spring
             implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-            implementation("org.springframework.boot:spring-boot-starter-security")
+//            implementation("org.springframework.boot:spring-boot-starter-security")
             implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
             implementation("org.jetbrains.kotlin:kotlin-reflect")
 
             //test
-            testImplementation("com.h2database:h2")
             testImplementation("org.springframework.boot:spring-boot-starter-test")
             testImplementation("org.springframework.security:spring-security-test")
         }

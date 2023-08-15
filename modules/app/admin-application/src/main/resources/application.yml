@@ -1,2 +1,21 @@
 server:
   port: 8081
+
+spring:
+    datasource:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      username: auto
+      password: autoregister!@#
+      url: jdbc:mysql://localhost:3306/auto-register
+
+    jpa:
+      database: mysql
+      show-sql: true
+      hibernate:
+        ddl-auto: create-drop #for test
+
+      properties:
+        hibernate:
+          show_sql: true
+          format_sql: true
+
