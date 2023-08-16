@@ -21,6 +21,7 @@ class NaverTemplate(
 ) {
 
     internal fun <T : NaverCommerceRequest<*>, R : NaverCommerceResponse> execute(request: T, response: Class<R>): R {
+        verifyServiceType(request, response)
         val httpEntity = createHttpEntity(request)
         return try {
             restTemplate.exchange("${properties.domain}${request.endpoint}", request.method, httpEntity, response).body!!
@@ -33,15 +34,16 @@ class NaverTemplate(
             throw IllegalArgumentException("naver api 호출 중 에러 발생")
         }
     }
-    private fun<T: NaverCommerceRequest<*>, R: NaverCommerceResponse> verifyServiceType(request: T, response: R) {
-        if (request.serviceType != response.serviceType) {
+    private fun<T: NaverCommerceRequest<*>, R: NaverCommerceResponse> verifyServiceType(request: T, response: Class<R>) {
+        val responseType = response.getConstructor().newInstance().serviceType
+        if (request.serviceType != responseType) {
             throw ServiceTypeNotMatchedException()
         }
     }
 
-    private fun <T : NaverCommerceRequest<*>> createHttpEntity(request: T): HttpEntity<Any> {
+    private fun <T : NaverCommerceRequest<*>> createHttpEntity(request: T): HttpEntity<T> {
         return if (request.body != null) {
-            HttpEntity(request.body, getBaseHeaders())
+            HttpEntity(request, getBaseHeaders())
         } else {
             HttpEntity(getBaseHeaders())
         }
