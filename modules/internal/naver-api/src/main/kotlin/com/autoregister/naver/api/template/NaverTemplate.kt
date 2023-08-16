@@ -13,6 +13,7 @@ import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.HttpServerErrorException
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
+import kotlin.reflect.KClass
 
 @Component
 class NaverTemplate(
@@ -20,11 +21,11 @@ class NaverTemplate(
     private val restTemplate: RestTemplate
 ) {
 
-    internal fun <T : NaverCommerceRequest<*>, R : NaverCommerceResponse> execute(request: T, response: Class<R>): R {
+    internal fun <T : NaverCommerceRequest<*>, R : NaverCommerceResponse> execute(request: T, response: KClass<R>): R {
         verifyServiceType(request, response)
         val httpEntity = createHttpEntity(request)
         return try {
-            restTemplate.exchange("${properties.domain}${request.endpoint}", request.method, httpEntity, response).body!!
+            restTemplate.exchange("${properties.domain}${request.endpoint}", request.method, httpEntity, response.java).body!!
         } catch (e: HttpClientErrorException) {
             throw FailResponseException(e.responseBodyAsString)
         } catch (e: HttpServerErrorException) {
@@ -34,8 +35,8 @@ class NaverTemplate(
             throw IllegalArgumentException("naver api 호출 중 에러 발생")
         }
     }
-    private fun<T: NaverCommerceRequest<*>, R: NaverCommerceResponse> verifyServiceType(request: T, response: Class<R>) {
-        val responseType = response.getConstructor().newInstance().serviceType
+    private fun<T: NaverCommerceRequest<*>, R: NaverCommerceResponse> verifyServiceType(request: T, response: KClass<R>) {
+        val responseType = response.java.getConstructor().newInstance().serviceType
         if (request.serviceType != responseType) {
             throw ServiceTypeNotMatchedException()
         }
