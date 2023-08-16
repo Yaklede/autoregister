@@ -5,7 +5,7 @@ import com.autoregister.naver.api.template.enumaration.ServiceType
 import org.springframework.http.HttpMethod
 
 data class ProductOrderIdsRequest(
-    val orderId: String = ""
+    var orderId: String = ""
 ) : NaverCommerceRequest<Any> {
     override val endpoint: String = "/external/v1/pay-order/seller/orders/$orderId/product-order-ids"
     override val method: HttpMethod = HttpMethod.GET
