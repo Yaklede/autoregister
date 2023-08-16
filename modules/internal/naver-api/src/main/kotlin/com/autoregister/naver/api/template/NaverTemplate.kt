@@ -6,11 +6,9 @@ import com.autoregister.naver.api.template.common.interfaces.NaverCommerceRespon
 import com.autoregister.naver.api.template.crypto.CryptoUtils
 import com.autoregister.naver.api.template.exception.FailResponseException
 import com.autoregister.naver.api.template.exception.ServiceTypeNotMatchedException
-import com.autoregister.naver.api.template.response.TokenResponse
-import com.sun.net.httpserver.HttpServer
+import com.autoregister.naver.api.template.common.dto.TokenResponse
 import org.springframework.http.*
 import org.springframework.stereotype.Component
-import org.springframework.stereotype.Service
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.HttpServerErrorException
 import org.springframework.web.client.RestTemplate

@@ -1,4 +1,4 @@
-package com.autoregister.naver.api.template.response
+package com.autoregister.naver.api.template.common.dto
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
