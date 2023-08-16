@@ -8,4 +8,5 @@ interface NaverCommerceRequest<T> {
     val method: HttpMethod
     val serviceType: ServiceType
     val body: T?
+        get() = null
 }
