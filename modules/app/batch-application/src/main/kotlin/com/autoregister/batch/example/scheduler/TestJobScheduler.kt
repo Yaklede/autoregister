@@ -11,16 +11,13 @@ import java.text.SimpleDateFormat
 @Component
 class TestJobScheduler(
     private val jobLauncher: JobLauncher,
-    @Qualifier("testJob") testJob: Job
+    @Qualifier("testJob") val testJob: Job
 ) {
-    private val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")
-
-    @Scheduled(fixedRate = 1000L)
-    fun runJob(testJob: Job) {
+    @Scheduled(cron = "0/5 * * * * ?")
+    fun runJob() {
         val param = JobParametersBuilder()
             .addString("JobId", System.currentTimeMillis().toString())
             .toJobParameters()
-
         jobLauncher.run(testJob, param)
     }
 }
