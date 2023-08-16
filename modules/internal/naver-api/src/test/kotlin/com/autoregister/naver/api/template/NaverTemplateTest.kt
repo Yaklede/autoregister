@@ -30,8 +30,11 @@ class NaverTemplateTest {
         )
 
         val request = ProductOrderIdsRequest(
-            orderId = "yourTesTOrderId"
+            orderId = "tes"
         )
-        naverTemplate.execute(request, ProductOrderIdsResponse::class)
+
+        Assertions.assertThatThrownBy {
+            naverTemplate.execute(request, ProductOrderIdsResponse::class)
+        }.isInstanceOf(FailResponseException::class.java)
     }
 }
