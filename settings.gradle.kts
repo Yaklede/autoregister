@@ -19,7 +19,7 @@ include(autoIncludeWithPathName("app") {
 })
 
 include(autoIncludeWithPathName("core") {
-    listOf("common")
+    listOf("common", "mysql-datasource")
 })
 
 include(autoIncludeWithPathName("internal") {
