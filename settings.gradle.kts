@@ -15,7 +15,7 @@ dependencyResolutionManagement {
 }
 
 include(autoIncludeWithPathName("app") {
-    listOf("admin-application", "web-application-common")
+    listOf("admin-application", "web-application-common", "batch-application")
 })
 
 include(autoIncludeWithPathName("core") {
