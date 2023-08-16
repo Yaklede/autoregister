@@ -23,7 +23,7 @@ include(autoIncludeWithPathName("core") {
 })
 
 include(autoIncludeWithPathName("internal") {
-    listOf("naver-api")
+    listOf("naver-api", "crawling")
 })
 
 fun autoIncludeWithPathName(path: String, modules: (Unit) -> List<String>): List<String> {
