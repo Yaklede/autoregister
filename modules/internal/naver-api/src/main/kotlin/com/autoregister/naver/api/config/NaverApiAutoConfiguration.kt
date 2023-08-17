@@ -2,6 +2,8 @@ package com.autoregister.naver.api.config
 
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.context.annotation.Bean
@@ -14,7 +16,7 @@ import java.time.Duration
 @EnableConfigurationProperties(NaverApiProperties::class)
 class NaverApiAutoConfiguration {
     @Bean
-    @ConditionalOnBean(RestTemplate::class)
+    @ConditionalOnMissingBean(RestTemplate::class)
     fun restTemplate(): RestTemplate {
         val restTemplateBuilder = RestTemplateBuilder()
         restTemplateBuilder.setConnectTimeout(Duration.ofSeconds(10L))
