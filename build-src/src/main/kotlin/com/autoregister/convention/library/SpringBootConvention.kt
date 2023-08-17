@@ -16,6 +16,8 @@ class SpringBootConvention : Plugin<Project> {
             it.add("implementation", "org.jetbrains.kotlin:kotlin-reflect")
             it.add("testImplementation", "org.springframework.boot:spring-boot-starter-test")
             it.add("testImplementation", "com.h2database:h2")
+            it.add("kapt","org.springframework.boot:spring-boot-configuration-processor")
+            it.add("annotationProcessor","org.springframework.boot:spring-boot-configuration-processor")
         }
     }
 }

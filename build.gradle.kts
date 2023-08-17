@@ -18,18 +18,10 @@ plugins {
 }
 
 allprojects {
-    subprojects {
-        apply {
-            plugin("com.autoregister.kotlin")
-            plugin("com.autoregister.spring.boot")
-        }
-
-        dependencies {
-            kapt("org.springframework.boot:spring-boot-configuration-processor")
-            annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-        }
+    apply {
+        plugin("com.autoregister.kotlin")
+        plugin("com.autoregister.spring.boot")
     }
-
     group = "com.autoregister"
     version = "0.0.1-SNAPSHOT"
 
@@ -57,7 +49,6 @@ allprojects {
 
 project(":modules:app") {
     subprojects {
-
         apply {
             plugin("com.autoregister.spring.application")
         }
