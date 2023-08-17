@@ -10,18 +10,18 @@ plugins {
     kotlin("kapt") version "1.8.22"
     kotlin("plugin.spring") version "1.8.22" apply false
     kotlin("plugin.jpa") version "1.8.22" apply false
+    id("com.autoregister.spring.boot") apply false
+    id("com.autoregister.kotlin") apply false
+    id("com.autoregister.querydsl") apply false
+    id("com.autoregister.spring.application") apply false
+    id("com.autoregister.core") apply false
 }
 
 allprojects {
     subprojects {
         apply {
-            plugin("org.jetbrains.kotlin.plugin.spring")
-            plugin("org.springframework.boot")
-            plugin("io.spring.dependency-management")
-            plugin("org.gradle.java-library")
-            plugin("org.jetbrains.kotlin.jvm")
-            plugin("org.gradle.java")
-            plugin("org.jetbrains.kotlin.kapt")
+            plugin("com.autoregister.kotlin")
+            plugin("com.autoregister.spring.boot")
         }
 
         dependencies {
@@ -57,8 +57,9 @@ allprojects {
 
 project(":modules:app") {
     subprojects {
-        dependencies {
-            implementation("org.springframework.boot:spring-boot-starter-web")
+
+        apply {
+            plugin("com.autoregister.spring.application")
         }
     }
 }
@@ -77,23 +78,8 @@ project(":modules:core") {
             annotations("jakarta.persistence.Embeddable")
             annotations("jakarta.persistence.MappedSuperClass")
         }
-
-        dependencies {
-            //DB
-            implementation ("com.querydsl:querydsl-jpa:5.0.0:jakarta")
-            kapt ("com.querydsl:querydsl-apt:5.0.0:jakarta")
-            kapt ("jakarta.annotation:jakarta.annotation-api")
-            kapt ("jakarta.persistence:jakarta.persistence-api")
-            //Spring
-            implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-//            implementation("org.springframework.boot:spring-boot-starter-security")
-            implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-            implementation("org.jetbrains.kotlin:kotlin-reflect")
-
-            //test
-            testImplementation("com.h2database:h2")
-            testImplementation("org.springframework.boot:spring-boot-starter-test")
-            testImplementation("org.springframework.security:spring-security-test")
+        apply {
+            plugin("com.autoregister.core")
         }
     }
 }
@@ -106,12 +92,8 @@ project(":modules:internal") {
     jar.enabled = true
 
     subprojects {
-        dependencies {
-            implementation("org.springframework.boot:spring-boot-starter-web")
-            implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-            implementation("org.jetbrains.kotlin:kotlin-reflect")
-
-            testImplementation("org.springframework.boot:spring-boot-starter-test")
+        apply {
+            plugin("com.autoregister.spring.application")
         }
     }
 }

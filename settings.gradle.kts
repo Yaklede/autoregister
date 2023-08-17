@@ -14,6 +14,9 @@ dependencyResolutionManagement {
     }
 }
 
+includeBuild("./build-src")
+
+
 include(autoIncludeWithPathName("app") {
     listOf("admin-application", "web-application-common", "batch-application")
 })
