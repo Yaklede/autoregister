@@ -11,12 +11,23 @@ import org.springframework.stereotype.Component
 class DomemeCrawling(
     private val chromeDriver: ChromeDriver
 ) : Crawling<DomemeResponse> {
+
+    private val numberRegex = Regex("[^0-9]")
+
     override fun crawl(query: String, returns: Class<DomemeResponse>, type: CrawlingType): DomemeResponse? {
         val url = type.defaultPath + query
         val containerPath = "/html/body/div[1]/div[2]"
         try {
             val count = getTotalCount(url, containerPath)
+            println("count = $count")
             val productIds = getProductIds(query, containerPath, count)
+            println("productIds size = ${productIds.size}")
+            val productDetails = productIds.map { getProductDetails(it) }
+            val test = StringBuilder()
+            productDetails.forEach {
+                test.append(it).append("\n")
+            }
+            println(test.toString())
         } catch (e: CrawlingException) {
             throw e
         } finally {
@@ -26,7 +37,32 @@ class DomemeCrawling(
     }
 
     private fun getProductDetails(productId: String): String {
-        TODO()
+        val url = "http://domeme.domeggook.com/s/$productId"
+        val defaultBodyPath = "/html/body/div[5]/div[1]/div[2]"
+        val mainPath = "$defaultBodyPath/div[1]"
+        val detailPath = "$defaultBodyPath/div[2]"
+        try {
+            chromeDriver.get(url)
+
+            val main = chromeDriver.findElement(
+                By.xpath("$mainPath")
+            )
+            val mainImage = chromeDriver.findElement(
+                By.xpath("${mainPath}")
+            ).text
+
+            println("img  = $mainImage")
+
+            println("main = ${main.text}")
+//            val detail = chromeDriver.findElement(
+//                By.xpath(detailPath)
+//            )
+//            println("detail = $detail")
+            return ""
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw CrawlingException("상품 정보 크롤링 중 에러발생")
+        }
     }
 
     private fun getTotalCount(url: String, containerPath: String): Int {
@@ -35,7 +71,7 @@ class DomemeCrawling(
             val doc = chromeDriver.findElement(
                 By.xpath("$containerPath/div[8]/div[2]/strong")
             )
-            return doc.text.replace(Regex("[^0-9]"), "").toInt()
+            return doc.text.replace(numberRegex, "").toInt()
         } catch (e: Exception) {
             e.printStackTrace()
             throw CrawlingException("도매매 크롤링 중 에러 발생")
@@ -50,11 +86,12 @@ class DomemeCrawling(
         val productIds = emptyList<String>().toMutableList()
         try {
             chromeDriver.get(url)
-            var index = 14
+            var index = 0
             while (totalCount != productIds.size) {
                 val productId = getProductId(containerPath, index)
                 if (productId.isNotBlank()) {
                     productIds.add(productId)
+                    println("productId = $productId")
                 }
                 index++
             }
@@ -71,11 +108,11 @@ class DomemeCrawling(
     ): String {
         return try {
             chromeDriver.findElement(
-                By.xpath("$containerPath/div[$i]/div[4]/div[1]/div[4]/span")
-            ).text
+//                By.xpath("$containerPath/div[$i]/div[4]/div[1]/div[4]/span")
+                By.xpath("$containerPath/div[$i]/div[4]/div[1]")
+            ).text.replace(numberRegex, "").trim()
         } catch (e: Exception) {
             ""
         }
-
     }
 }
