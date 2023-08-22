@@ -26,6 +26,6 @@ class DomemeCrawlingTest {
         val chromeDriver = ChromeDriver(options)
 
         val crawling: Crawling<DomemeResponse> = DomemeCrawling(chromeDriver)
-        crawling.crawl("자전거", DomemeResponse::class.java, CrawlingType.DOMEME)
+        crawling.crawl("에어팟 케이스", DomemeResponse::class.java, CrawlingType.DOMEME)
     }
 }
