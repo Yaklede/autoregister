@@ -6,5 +6,13 @@ data class DomemeDetails(
     val productId: String,
     val productMainImages: List<String>,
     val productDetailsImage: String,
-    val amount: Int
-)
+    val amount: Int,
+    val deliveryInfo: DeliveryInfo
+) {
+    data class DeliveryInfo(
+        val defaultDeliveryDay: Int,
+        val averageShippingDays: Double,
+        val deliveryCost: Int,
+        val bundledDelivery: Boolean
+    )
+}
