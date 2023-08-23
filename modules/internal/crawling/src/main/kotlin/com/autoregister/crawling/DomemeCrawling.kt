@@ -45,11 +45,11 @@ class DomemeCrawling(
             chromeDriver.get(url)
 
             val main = chromeDriver.findElement(
-                By.xpath("$mainPath")
+                By.xpath(mainPath)
             )
             val mainImage = chromeDriver.findElement(
-                By.xpath("${mainPath}")
-            ).text
+                By.xpath("$mainPath/div[2]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/a[1]/img")
+            ).getAttribute("src")
 
             println("img  = $mainImage")
 
