@@ -2,10 +2,14 @@ package com.autoregister.crawling
 
 import com.autoregister.crawling.enumeration.CrawlingType
 import com.autoregister.crawling.exception.CrawlingException
+import com.autoregister.crawling.response.domeme.DomemeDetails
 import com.autoregister.crawling.response.domeme.DomemeResponse
 import org.openqa.selenium.By
 import org.openqa.selenium.chrome.ChromeDriver
+import org.springframework.expression.common.ExpressionUtils.toDouble
 import org.springframework.stereotype.Component
+import java.util.regex.Pattern
+import java.util.regex.Pattern.*
 
 @Component
 class DomemeCrawling(
@@ -51,19 +55,74 @@ class DomemeCrawling(
                 By.xpath("$mainPath/div[2]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/a[1]/img")
             ).getAttribute("src")
 
-            println("img  = $mainImage")
+            val mainDetailPath = "$mainPath/div[2]/div[2]/div[2]"
+            val mainDetailInfoPath = "$mainDetailPath/div[2]/table[1]/tbody[1]"
+            val mainTitle = chromeDriver.findElement(
+                By.xpath("$mainDetailPath/h1")
+            ).text
 
-            println("main = ${main.text}")
-//            val detail = chromeDriver.findElement(
-//                By.xpath(detailPath)
-//            )
-//            println("detail = $detail")
+            val mainInfoPrice = chromeDriver.findElement(
+                By.xpath("$mainDetailInfoPath/tr[1]")
+            ).text
+
+            var defaultInfoPath= 2
+            var domechukPrice = ""
+
+            var mainInfoDeliveryInfo = chromeDriver.findElement(
+                By.xpath("$mainDetailInfoPath/tr[$defaultInfoPath]")
+            ).text
+
+            if (mainInfoDeliveryInfo.contains("도매꾹")) {
+                domechukPrice = mainInfoDeliveryInfo
+                defaultInfoPath++
+                mainInfoDeliveryInfo = chromeDriver.findElement(
+                    By.xpath("$mainDetailInfoPath/tr[$defaultInfoPath]")
+                ).text
+            }
+
+            val quantity = chromeDriver.findElement(
+                By.xpath("$mainDetailInfoPath/tr[${defaultInfoPath + 1}]")
+            ).text
+
+            val madeCountry = chromeDriver.findElement(
+                By.xpath("$mainDetailInfoPath/tr[${defaultInfoPath + 2}]")
+            ).text
+
+            println("img  = $mainImage")
+            println("main title = $mainTitle")
+            println("mainInfoPrice = $mainInfoPrice")
+            println("mainInfoDeliveryInfo = $mainInfoDeliveryInfo")
+            println("domechukPrice = $domechukPrice")
+            println("quantity = $quantity")
+            println("madeCountry = $madeCountry")
+
+            println(parseDeliveryInfo(mainInfoDeliveryInfo))
+
             return ""
         } catch (e: Exception) {
             e.printStackTrace()
             throw CrawlingException("상품 정보 크롤링 중 에러발생")
         }
     }
+
+    fun parseDeliveryInfo(input: String): DomemeDetails.DeliveryInfo {
+        var input = input.replace("\n","")
+        val pattern = "배송정보(\\d+일 이내 출고|익일출고) \\(평균출고일(\\d+\\.\\d+)일\\) 택배 (\\d+,\\d+)원 / (묶음배송 가능 \\(동일 출고지 상품만 가능\\)|주문시결제묶음배송 불가능)"
+        val regex = compile(pattern)
+        val matchResult = regex.matcher(input)
+
+        if (!matchResult.find()) {
+            throw CrawlingException("배송 정보 파싱 실패")
+        }
+
+        return DomemeDetails.DeliveryInfo(
+            defaultDeliveryDay = matchResult.group(1).replace(numberRegex, "").toInt(),
+            averageShippingDays = matchResult.group(2).toDouble(),
+            deliveryCost = matchResult.group(3).replace(",","").toInt(),
+            bundledDelivery = !input.contains("불가능")
+        )
+    }
+
 
     private fun getTotalCount(url: String, containerPath: String): Int {
         try {
