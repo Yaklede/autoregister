@@ -82,7 +82,7 @@ class DomemeCrawling(
 
             val quantity = chromeDriver.findElement(
                 By.xpath("$mainDetailInfoPath/tr[${defaultInfoPath + 1}]")
-            ).text
+            ).text.replace(numberRegex, "").toInt()
 
             val madeCountry = chromeDriver.findElement(
                 By.xpath("$mainDetailInfoPath/tr[${defaultInfoPath + 2}]")
@@ -94,9 +94,10 @@ class DomemeCrawling(
             println("mainInfoDeliveryInfo = $mainInfoDeliveryInfo")
             println("domechukPrice = $domechukPrice")
             println("quantity = $quantity")
-            println("madeCountry = $madeCountry")
 
-            println(parseDeliveryInfo(mainInfoDeliveryInfo))
+//            println("country = $madeCountry")
+            println(DomemeDetails.MadeCountry.parse(madeCountry))
+            println(DomemeDetails.DeliveryInfo.parse(mainInfoDeliveryInfo))
 
             return ""
         } catch (e: Exception) {
@@ -104,25 +105,6 @@ class DomemeCrawling(
             throw CrawlingException("상품 정보 크롤링 중 에러발생")
         }
     }
-
-    fun parseDeliveryInfo(input: String): DomemeDetails.DeliveryInfo {
-        var input = input.replace("\n","")
-        val pattern = "배송정보(\\d+일 이내 출고|익일출고) \\(평균출고일(\\d+\\.\\d+)일\\) 택배 (\\d+,\\d+)원 / (묶음배송 가능 \\(동일 출고지 상품만 가능\\)|주문시결제묶음배송 불가능)"
-        val regex = compile(pattern)
-        val matchResult = regex.matcher(input)
-
-        if (!matchResult.find()) {
-            throw CrawlingException("배송 정보 파싱 실패")
-        }
-
-        return DomemeDetails.DeliveryInfo(
-            defaultDeliveryDay = matchResult.group(1).replace(numberRegex, "").toInt(),
-            averageShippingDays = matchResult.group(2).toDouble(),
-            deliveryCost = matchResult.group(3).replace(",","").toInt(),
-            bundledDelivery = !input.contains("불가능")
-        )
-    }
-
 
     private fun getTotalCount(url: String, containerPath: String): Int {
         try {
