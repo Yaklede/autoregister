@@ -46,10 +46,6 @@ class DomemeCrawling(
         val detailPath = "$defaultBodyPath/div[2]"
         try {
             chromeDriver.get(url)
-
-            val main = chromeDriver.findElement(
-                By.xpath(mainPath)
-            )
             val mainImage = chromeDriver.findElement(
                 By.xpath("$mainPath/div[2]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/a[1]/img")
             ).getAttribute("src")
@@ -87,15 +83,22 @@ class DomemeCrawling(
                 By.xpath("$mainDetailInfoPath/tr[${defaultInfoPath + 2}]")
             ).text
 
-            println("img  = $mainImage")
-            println("main title = $mainTitle")
-            println("mainInfoPrice = $mainInfoPrice")
-            println("mainInfoDeliveryInfo = $mainInfoDeliveryInfo")
-            println("domechukPrice = $domechukPrice")
-            println("quantity = $quantity")
-            println(MadeCountry.parse(madeCountry))
-            println(DeliveryInfo.parse(mainInfoDeliveryInfo))
 
+            val detailImageUrls = chromeDriver.findElement(
+                By.xpath("$detailPath/div[1]/div[1]/div[1]/div[1]")
+            ).text
+
+            val detailImageUrls2 = chromeDriver.findElement(
+                By.xpath("$detailPath/div[1]/div[1]/div[1]/div[2]")
+            ).text
+
+            val detailImageUrls3 = chromeDriver.findElement(
+                By.xpath("$detailPath/div[1]/div[1]/div[1]/div[3]")
+            ).text
+
+            val detailImageUrls4 = chromeDriver.findElement(
+                By.xpath("$detailPath/div[1]/div[1]/div[1]/div[4]/img")
+            ).getAttribute("src")
 
             val details = DomemeDetails(
                 productId = productId,
@@ -108,8 +111,12 @@ class DomemeCrawling(
                 madeCountry = MadeCountry.parse(madeCountry),
                 productDetailsImageUrl = ""
             )
-
             println(details)
+            println("test1 = $detailImageUrls")
+            println("test2 = $detailImageUrls2")
+            println("test3 = $detailImageUrls3")
+            println("test4 = $detailImageUrls4")
+
 
             return ""
         } catch (e: Exception) {
