@@ -2,14 +2,13 @@ package com.autoregister.crawling
 
 import com.autoregister.crawling.enumeration.CrawlingType
 import com.autoregister.crawling.exception.CrawlingException
+import com.autoregister.crawling.response.domeme.DeliveryInfo
 import com.autoregister.crawling.response.domeme.DomemeDetails
 import com.autoregister.crawling.response.domeme.DomemeResponse
+import com.autoregister.crawling.response.domeme.MadeCountry
 import org.openqa.selenium.By
 import org.openqa.selenium.chrome.ChromeDriver
-import org.springframework.expression.common.ExpressionUtils.toDouble
 import org.springframework.stereotype.Component
-import java.util.regex.Pattern
-import java.util.regex.Pattern.*
 
 @Component
 class DomemeCrawling(
@@ -65,7 +64,7 @@ class DomemeCrawling(
                 By.xpath("$mainDetailInfoPath/tr[1]")
             ).text
 
-            var defaultInfoPath= 2
+            var defaultInfoPath = 2
             var domechukPrice = ""
 
             var mainInfoDeliveryInfo = chromeDriver.findElement(
@@ -94,10 +93,23 @@ class DomemeCrawling(
             println("mainInfoDeliveryInfo = $mainInfoDeliveryInfo")
             println("domechukPrice = $domechukPrice")
             println("quantity = $quantity")
+            println(MadeCountry.parse(madeCountry))
+            println(DeliveryInfo.parse(mainInfoDeliveryInfo))
 
-//            println("country = $madeCountry")
-            println(DomemeDetails.MadeCountry.parse(madeCountry))
-            println(DomemeDetails.DeliveryInfo.parse(mainInfoDeliveryInfo))
+
+            val details = DomemeDetails(
+                productId = productId,
+                productName = mainTitle,
+                productMainImageUrl = mainImage,
+                price = mainInfoPrice,
+                domecukPrice = domechukPrice,
+                quantity = quantity,
+                deliveryInfo = DeliveryInfo.parse(mainInfoDeliveryInfo),
+                madeCountry = MadeCountry.parse(madeCountry),
+                productDetailsImageUrl = ""
+            )
+
+            println(details)
 
             return ""
         } catch (e: Exception) {
