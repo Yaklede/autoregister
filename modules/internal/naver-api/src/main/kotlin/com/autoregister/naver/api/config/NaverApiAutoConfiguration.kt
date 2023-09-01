@@ -19,8 +19,8 @@ class NaverApiAutoConfiguration {
     @ConditionalOnMissingBean(RestTemplate::class)
     fun restTemplate(): RestTemplate {
         val restTemplateBuilder = RestTemplateBuilder()
-        restTemplateBuilder.setConnectTimeout(Duration.ofSeconds(10L))
-        restTemplateBuilder.setReadTimeout(Duration.ofSeconds(10L))
+            .setConnectTimeout(Duration.ofSeconds(10L))
+            .setReadTimeout(Duration.ofSeconds(10L))
         return restTemplateBuilder.build()
     }
 }
